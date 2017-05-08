@@ -770,7 +770,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
         if self.edtMnPrivateKey.text():
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setText('This will overwrite current private key value. Do you really want to proceed?')
+            msg.setText('This operation will overwrite current private key value. Do you really want to proceed?')
             msg.setStandardButtons(QMessageBox.Ok | QMessageBox.No)
             msg.setDefaultButton(QMessageBox.No)
             retval = msg.exec_()
@@ -812,7 +812,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
         """
         if self.curMasternode:
             if not self.curMasternode.collateralTx:
-                self.errorMsg("Collateral transaction id not set.")
+                self.errorMsg("Collateral transaction id is not set.")
                 return
 
             if not re.match('\d{1,4}', self.curMasternode.collateralTxIndex):
@@ -828,7 +828,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
                 return
 
             if not self.curMasternode.privateKey:
-                self.errorMsg("Masternode's private key not set.")
+                self.errorMsg("Masternode's private key is not set.")
                 return
 
         self.checkDashdConnection()
@@ -909,7 +909,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
                         return
             except Exception as e:
                 if self.queryDlg(
-                        message="Error occurred while verifying collateral transaction: %s"
+                        message="Error occurred during verification of collateral transaction: %s"
                                 "\n\nDo you really want to continue?"
                                 % str(e),
                         buttons=QMessageBox.Yes | QMessageBox.Cancel,
@@ -929,7 +929,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
 
             sig = self.hw_client.sign_message('Dash', address_n, serialize_for_sig)
             if sig.address != dash_addr:
-                self.errorMsg('%s address mismatch after signing.' % self.getHwName())
+                self.errorMsg('Address of %s mismatch after signing.' % self.getHwName())
                 return
             sig1 = sig.signature.hex()
 
@@ -956,7 +956,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
 
             work = '01' + work
             ret = self.dashd_intf.masternodebroadcast("decode", work)
-            if ret['overall'].startswith('Successfully decoded broadcast messages for 1 masternodes'):
+            if ret['overall'].startswith('Broadcast messages for 1 masternodes successfully decoded'):
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Information)
                 msg.setText('Press <OK> if you want to broadcast Masternode configuration or <Cancel> to exit.')
@@ -967,7 +967,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
                     return
 
                 ret = self.dashd_intf.masternodebroadcast("relay", work)
-                if ret['overall'].startswith('Successfully relayed broadcast messages for 1 masternodes'):
+                if ret['overall'].startswith('Broadcast messages for 1 masternodes successfully relayed'):
                     self.infoMsg(ret['overall'])
                     self.btnRefreshMnStatusClick()
                 else:
@@ -1029,7 +1029,7 @@ class Ui_MainWindow(wnd_main_base.Ui_MainWindow, WndUtils, QObject):
                 src_addresses.append((self.curMasternode.collateralAddress, self.curMasternode.collateralBip32Path))
                 self.executeTransferFundsDialog(src_addresses)
             else:
-                self.errorMsg("Empty Masternpde collateral's BIP32 path and/or address")
+                self.errorMsg("Empty Masternode collateral's BIP32 path and/or address")
         else:
             self.errorMsg('No masternode selected')
 
